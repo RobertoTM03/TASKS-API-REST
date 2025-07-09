@@ -1,9 +1,11 @@
 CREATE TABLE IF NOT EXISTS tasks (
                                      id SERIAL PRIMARY KEY,
-                                     description TEXT NOT NULL
+                                     description TEXT NOT NULL,
+                                     ownerId UUID NOT NULL
 );
 
-INSERT INTO tasks (description) VALUES
-                                    ('Tarea de prueba 1'),
-                                    ('Tarea de prueba 2'),
-                                    ('Tarea de prueba 3');
+CREATE TABLE users (
+                       id UUID PRIMARY KEY,
+                       email TEXT UNIQUE NOT NULL,
+                       password TEXT NOT NULL
+);
