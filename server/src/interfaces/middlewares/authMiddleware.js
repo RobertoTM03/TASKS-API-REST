@@ -16,6 +16,8 @@ const authMiddleware = (req, res, next) => {
         const token = parts[1];
         req.user = jwtService.verify(token);
 
+
+
         next();
     } catch (err) {
         console.error('Auth error:', err.message);

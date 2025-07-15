@@ -44,7 +44,8 @@ exports.login = async (req, res) => {
         console.error(err);
         if (err.name === 'UserDontExistError') {
             res.status(404).json({ error: 'User dont exist' });
+        } else {
+            res.status(500).json({ error: err.message });
         }
-        res.status(500).json({ error: err.message });
     }
 };

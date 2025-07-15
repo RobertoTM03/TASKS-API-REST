@@ -1,4 +1,3 @@
-// errors.js
 class UserAlreadyExistsError extends Error {
     constructor(message = 'User already exists') {
         super(message);
@@ -20,8 +19,16 @@ class UserDontExistError extends Error {
     }
 }
 
+class TaskNotFoundError extends Error {
+    constructor(message = 'Task not found') {
+        super(message);
+        this.name = 'TaskNotFoundError';
+    }
+}
+
 module.exports = {
     UserAlreadyExistsError,
     UnknownError,
-    UserDontExistError
+    UserDontExistError,
+    TaskNotFoundError,
 };
