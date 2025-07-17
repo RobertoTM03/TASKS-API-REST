@@ -5,6 +5,13 @@ class UserAlreadyExistsError extends Error {
     }
 }
 
+class InvalidCredentialsError extends Error {
+    constructor(message = 'Invalid credentials') {
+        super(message);
+        this.name = 'InvalidCredentialsError';
+    }
+}
+
 class UnknownError extends Error {
     constructor(message = 'Unknown database error') {
         super(message);
@@ -28,6 +35,7 @@ class TaskNotFoundError extends Error {
 
 module.exports = {
     UserAlreadyExistsError,
+    InvalidCredentialsError,
     UnknownError,
     UserDontExistError,
     TaskNotFoundError,

@@ -38,7 +38,6 @@ class TaskRepositoryImpl extends TaskRepository {
 
         try {
             const result = await pool.query(query, [ownerId]);
-            console.log(result);
             return result.rows.map(
                 row =>
                     new Task(
@@ -61,8 +60,6 @@ class TaskRepositoryImpl extends TaskRepository {
         `;
 
         try {
-            console.log("TaskId: " + taskId);
-
             const result = await pool.query(query, [taskId]);
             if (result.rows.length === 0) throw new TaskNotFoundError();
 

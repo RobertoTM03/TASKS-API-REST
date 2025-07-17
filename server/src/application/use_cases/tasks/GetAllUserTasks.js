@@ -1,5 +1,3 @@
-const req = require("express/lib/request");
-
 class GetAllUserTasks {
     constructor(taskRepository) {
         this.taskRepository = taskRepository;

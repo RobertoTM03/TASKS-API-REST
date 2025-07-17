@@ -5,7 +5,6 @@ const DeleteTask = require('../../application/use_cases/tasks/DeleteTask');
 const GetTaskById = require('../../application/use_cases/tasks/GetTaskById');
 const GetAllTasks = require('../../application/use_cases/tasks/GetAllUserTasks');
 const UpdateTask = require('../../application/use_cases/tasks/UpdateTask');
-const { TaskNotFoundError } = require("../../errors");
 
 const taskRepository = new TaskRepositoryImpl();
 
@@ -16,6 +15,7 @@ const deleteTaskUseCase = new DeleteTask(taskRepository);
 const updateTaskUseCase = new UpdateTask(taskRepository);
 
 exports.getTaskById = async (req, res) => {
+    // TODO: Only owner should can see the task
     try {
         const { taskId } = req.params;
 
@@ -51,6 +51,7 @@ exports.getAllUserTasks = async (req, res) => {
 };
 
 exports.createTask = async (req, res) => {
+    // TODO: Only owner should can create a task
     try {
         if (!req.user || !req.user.id) {
             return res.status(401).json({ error: 'User authentication required' });
@@ -72,6 +73,7 @@ exports.createTask = async (req, res) => {
 };
 
 exports.deleteTask = async (req, res) => {
+    // TODO: Only owner should can delete the task
     try {
         const { taskId } = req.params;
 
@@ -92,6 +94,7 @@ exports.deleteTask = async (req, res) => {
 };
 
 exports.updateTask = async (req, res) => {
+    // TODO: Only owner should can update the task
     try {
         const { taskId } = req.params;
         const { description } = req.body;

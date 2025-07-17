@@ -42,8 +42,8 @@ exports.login = async (req, res) => {
         res.json({ token });
     } catch (err) {
         console.error(err);
-        if (err.name === 'UserDontExistError') {
-            res.status(404).json({ error: 'User dont exist' });
+        if (err.name === 'InvalidCredentialsError') {
+            res.status(401).json({ error: 'Invalid credentials' });
         } else {
             res.status(500).json({ error: err.message });
         }

@@ -1,3 +1,5 @@
+const {InvalidCredentialsError} = require("../../../errors");
+
 class LoginUser {
     constructor(userRepository, hashService, jwtService) {
         this.userRepository = userRepository;
@@ -7,10 +9,10 @@ class LoginUser {
 
     async execute( {email, password} ) {
         const user = await this.userRepository.findByEmail(email);
-        if (!user) throw new Error('Invalid credentials');
+        if (!user) throw new InvalidCredentialsError();
 
         const isValid = await this.hashService.compare(password, user.password);
-        if (!isValid) throw new Error('Invalid credentials');
+        if (!isValid) throw new InvalidCredentialsError();
 
         return this.jwtService.sign({ id: user.id, email: user.email });
     }
