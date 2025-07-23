@@ -33,10 +33,18 @@ class TaskNotFoundError extends Error {
     }
 }
 
+class PermissionDeniedError extends Error {
+    constructor(message = 'Permission denied') {
+        super(message);
+        this.name = 'PermissionDeniedError';
+    }
+}
+
 module.exports = {
     UserAlreadyExistsError,
     InvalidCredentialsError,
     UnknownError,
     UserDontExistError,
     TaskNotFoundError,
+    PermissionDeniedError
 };

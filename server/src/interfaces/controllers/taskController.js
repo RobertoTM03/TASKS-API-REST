@@ -15,7 +15,6 @@ const deleteTaskUseCase = new DeleteTask(taskRepository);
 const updateTaskUseCase = new UpdateTask(taskRepository);
 
 exports.getTaskById = async (req, res) => {
-    // TODO: Only owner should can see the task
     try {
         const { taskId } = req.params;
 
@@ -23,14 +22,19 @@ exports.getTaskById = async (req, res) => {
             return res.status(400).json({ error: 'Task ID is required in the path' });
         }
 
-        const task = await getTaskByIdUseCase.execute({ taskId: taskId.trim() });
+        const task = await getTaskByIdUseCase.execute({ taskId: taskId.trim(), ownerId: req.user.id });
         res.json(task);
     } catch (err) {
         console.error(err);
-        if (err.name === 'TaskNotFoundError') {
-            res.status(404).json({ error: 'Task not found' });
-        } else {
-            res.status(500).json({ error: err.message });
+        switch (err.name) {
+            case 'PermissionDeniedError':
+                res.status(403).json({ error: 'Permission denied' });
+                break;
+            case 'TaskNotFoundError':
+                res.status(404).json({ error: 'Task not found' });
+                break;
+            default:
+                res.status(500).json({ error: err.message });
         }
     }
 };
@@ -51,7 +55,6 @@ exports.getAllUserTasks = async (req, res) => {
 };
 
 exports.createTask = async (req, res) => {
-    // TODO: Only owner should can create a task
     try {
         if (!req.user || !req.user.id) {
             return res.status(401).json({ error: 'User authentication required' });
@@ -63,7 +66,7 @@ exports.createTask = async (req, res) => {
         if (!description || typeof description !== 'string' || !description.trim()) {
             return res.status(400).json({ error: 'Description is required in the request body' });
         }
-
+2
         const task = await createTaskUseCase.execute({ taskText: description.trim(), ownerId });
         res.status(201).json(task);
     } catch (err) {
@@ -73,7 +76,6 @@ exports.createTask = async (req, res) => {
 };
 
 exports.deleteTask = async (req, res) => {
-    // TODO: Only owner should can delete the task
     try {
         const { taskId } = req.params;
 
@@ -81,20 +83,24 @@ exports.deleteTask = async (req, res) => {
             return res.status(400).json({ error: 'Task ID is required in the path' });
         }
 
-        await deleteTaskUseCase.execute({ taskId: taskId.trim() });
+        await deleteTaskUseCase.execute({ taskId: taskId.trim(), ownerId: req.user.id });
         res.status(204).send();
     } catch (err) {
         console.error(err);
-        if (err.name === 'TaskNotFoundError') {
-            res.status(404).json({ error: 'Task not found' });
-        } else {
-            res.status(500).json({ error: err.message });
+        switch (err.name) {
+            case 'PermissionDeniedError':
+                res.status(403).json({ error: 'Permission denied' });
+                break;
+            case 'TaskNotFoundError':
+                res.status(404).json({ error: 'Task not found' });
+                break;
+            default:
+                res.status(500).json({ error: err.message });
         }
     }
 };
 
 exports.updateTask = async (req, res) => {
-    // TODO: Only owner should can update the task
     try {
         const { taskId } = req.params;
         const { description } = req.body;
@@ -109,16 +115,22 @@ exports.updateTask = async (req, res) => {
 
         const updatedTask = await updateTaskUseCase.execute({
             taskId: taskId.trim(),
-            taskText: description.trim()
+            taskText: description.trim(),
+            ownerId: req.user.id
         });
 
         res.json(updatedTask);
     } catch (err) {
         console.error(err);
-        if (err.name === 'TaskNotFoundError') {
-            res.status(404).json({ error: 'Task not found' });
-        } else {
-            res.status(500).json({ error: err.message });
+        switch (err.name) {
+            case 'PermissionDeniedError':
+                res.status(403).json({ error: 'Permission denied' });
+                break;
+            case 'TaskNotFoundError':
+                res.status(404).json({ error: 'Task not found' });
+                break;
+            default:
+                res.status(500).json({ error: err.message });
         }
     }
 };
